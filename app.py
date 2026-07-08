@@ -25,6 +25,21 @@ st.set_page_config(
     layout="wide"
 )
 
+# --- Google Analytics ---
+GA_TRACKING_ID = "G-YHLJ4FYZHY"
+
+GA_SCRIPT = f"""
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_TRACKING_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', '{GA_TRACKING_ID}');
+</script>
+"""
+
+st.markdown(GA_SCRIPT, unsafe_allow_html=True)
+
 # --- Header ---
 st.title("🤖 AI Resume Analyzer Pro")
 st.markdown("### Powered by TF-IDF, Cosine Similarity & NLP")
