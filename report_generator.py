@@ -87,12 +87,15 @@ def generate_pdf_report(match_score, analysis, suggestions):
     pdf.add_skills_list('Extra Skills:', analysis['extra_skills'], (52, 152, 219))
     
     # Suggestions
+      # Suggestions
     pdf.add_page()
     pdf.section_title('AI-Powered Suggestions')
     for i, suggestion in enumerate(suggestions, 1):
-        # Remove emojis for PDF compatibility
         clean_suggestion = ''.join(c for c in suggestion if ord(c) < 128)
         pdf.section_body(f"{i}. {clean_suggestion}")
     
-    # Return PDF as bytes
-    return bytes(pdf.output(dest='S'))
+    # Return PDF as bytes (fixed for compatibility)
+    output = pdf.output(dest='S')
+    if isinstance(output, str):
+        return output.encode('latin-1')
+    return bytes(output)
