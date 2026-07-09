@@ -1,7 +1,7 @@
 # app.py
 # AI Resume & Job Description Matcher - Main Application
 
-
+import streamlit as st
 from analyzer import (
     extract_text_from_pdf,
     clean_text,
@@ -24,8 +24,6 @@ st.set_page_config(
     page_icon="🤖",
     layout="wide"
 )
-
-st.markdown(GA_SCRIPT, unsafe_allow_html=True)
 
 # --- Header ---
 st.title("🤖 AI Resume Analyzer Pro")
