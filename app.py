@@ -7,7 +7,8 @@ from analyzer import (
     clean_text,
     calculate_match_score,
     analyze_skills,
-    generate_suggestions
+    generate_suggestions,
+    suggest_job_roles
 )
 from visualizer import (
     create_match_gauge,
@@ -20,16 +21,40 @@ from report_generator import generate_pdf_report
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="AI Resume Analyzer Pro",
+    page_title="AI Resume Analyzer Pro | Built by Jerome",
     page_icon="🤖",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://github.com/JEROME146art/resume-analyzer',
+        'Report a bug': 'https://github.com/JEROME146art/resume-analyzer/issues',
+        'About': """
+        # AI Resume Analyzer Pro 🤖
+        
+        **Built with ❤️ by Jerome**
+        
+        An intelligent resume analysis tool powered by:
+        - TF-IDF Vectorization
+        - Cosine Similarity
+        - NLP Skill Extraction
+        
+        **GitHub:** https://github.com/JEROME146art/resume-analyzer
+        """
+    }
 )
-
 # --- Header ---
-st.title("🤖 AI Resume Analyzer Pro")
-st.markdown("### Powered by TF-IDF, Cosine Similarity & NLP")
+col_logo, col_title = st.columns([1, 5])
+with col_logo:
+    st.markdown("# 🤖")
+with col_title:
+    st.markdown("# AI Resume Analyzer Pro")
+    st.markdown("**Powered by TF-IDF, Cosine Similarity & NLP** | Built with ❤️ by **Jerome**")
+
 st.markdown("---")
 
+# Info banner
+
+st.info("🚀 **New:** AI-powered job role suggestions based on your skills!")
 # --- Sidebar ---
 with st.sidebar:
     st.header("⚙️ Settings")
@@ -122,7 +147,21 @@ if mode == "Single Resume Analysis":
                 st.subheader("🤖 AI Suggestions")
                 for suggestion in suggestions:
                     st.markdown(f"- {suggestion}")
+                                # --- Job Role Suggester ---
+                st.markdown("---")
+                st.subheader("🎯 Recommended Job Roles for You")
+                suggested_roles = suggest_job_roles(analysis['resume_skills'])
                 
+                if suggested_roles:
+                    st.markdown("Based on your skills, you're a good fit for these roles:")
+                    
+                    for i, role in enumerate(suggested_roles, 1):
+                        with st.expander(f"#{i} {role['role']} — {role['match']}% match"):
+                            st.progress(role['match'] / 100)
+                            st.markdown(f"**Your matching skills for this role:**")
+                            st.success(", ".join(sorted(role['matched_skills'])))
+                else:
+                    st.warning("Add more technical skills to get job role suggestions!")
                 st.markdown("---")
                 st.subheader("📥 Download Report")
                 pdf_bytes = generate_pdf_report(match_score, analysis, suggestions)

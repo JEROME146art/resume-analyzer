@@ -107,3 +107,62 @@ def generate_suggestions(analysis, match_score):
         suggestions.append(f"✨ You have {len(analysis['extra_skills'])} additional skills that could be valuable for other roles.")
     
     return suggestions
+def suggest_job_roles(resume_skills):
+    """Suggest job roles based on detected skills."""
+    role_requirements = {
+        "🧠 Machine Learning Engineer": {
+            "python", "machine learning", "tensorflow", "pytorch", 
+            "scikit-learn", "pandas", "numpy", "deep learning"
+        },
+        "📊 Data Scientist": {
+            "python", "r", "sql", "pandas", "numpy", "statistics",
+            "machine learning", "matplotlib", "seaborn"
+        },
+        "🔧 Data Engineer": {
+            "python", "sql", "spark", "hadoop", "kafka", "airflow",
+            "etl", "aws", "docker"
+        },
+        "📈 Data Analyst": {
+            "sql", "excel", "python", "tableau", "power bi",
+            "pandas", "analytical", "statistics"
+        },
+        "💻 Full Stack Developer": {
+            "javascript", "react", "nodejs", "html", "css",
+            "mongodb", "express", "git"
+        },
+        "🎨 Frontend Developer": {
+            "javascript", "react", "html", "css", "typescript",
+            "vue", "angular", "tailwind"
+        },
+        "⚙️ Backend Developer": {
+            "python", "java", "nodejs", "django", "flask",
+            "sql", "mongodb", "api"
+        },
+        "☁️ DevOps Engineer": {
+            "aws", "docker", "kubernetes", "jenkins", "terraform",
+            "linux", "cicd", "git"
+        },
+        "🤖 AI Engineer": {
+            "python", "tensorflow", "pytorch", "nlp", "computer vision",
+            "huggingface", "transformers", "deep learning"
+        },
+        "📱 Mobile Developer": {
+            "swift", "kotlin", "react", "dart", "java", "android", "ios"
+        }
+    }
+    
+    role_scores = []
+    for role, required_skills in role_requirements.items():
+        matched = required_skills.intersection({s.lower() for s in resume_skills})
+        if required_skills:
+            match_percentage = (len(matched) / len(required_skills)) * 100
+            if match_percentage > 20:  # Only suggest if >20% match
+                role_scores.append({
+                    "role": role,
+                    "match": round(match_percentage, 1),
+                    "matched_skills": matched
+                })
+    
+    # Sort by match percentage
+    role_scores.sort(key=lambda x: x['match'], reverse=True)
+    return role_scores[:5]  # Top 5 roles
