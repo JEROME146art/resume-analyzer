@@ -1,7 +1,7 @@
 # app.py
 # AI Resume & Job Description Matcher - Main Application
 
-import streamlit as st
+from streamlit_gtag import st_gtag
 from analyzer import (
     extract_text_from_pdf,
     clean_text,
@@ -26,18 +26,14 @@ st.set_page_config(
 )
 
 # --- Google Analytics ---
-GA_TRACKING_ID = "G-YHLJ4FYZHY"
+from streamlit_gtag import st_gtag
 
-GA_SCRIPT = f"""
-<script async src="https://www.googletagmanager.com/gtag/js?id={GA_TRACKING_ID}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', '{GA_TRACKING_ID}');
-</script>
-"""
-
+st_gtag(
+    key="ga_tracker",
+    id="G-YHLJ4FYZHY",
+    event_name="page_view",
+    params={"page_title": "AI Resume Analyzer"}
+)
 st.markdown(GA_SCRIPT, unsafe_allow_html=True)
 
 # --- Header ---
